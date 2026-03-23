@@ -1,0 +1,85 @@
+{
+  "updated": "2026-03-23T04:21:57.999Z",
+  "prices": {
+    "bitcoin": {
+      "symbol": "BTC",
+      "name": "Bitcoin",
+      "price": "$68,161.00",
+      "rawPrice": 68161,
+      "change": "-1.59%",
+      "rawChange": -1.5881,
+      "marketCap": "$1.36T",
+      "volume": "$28.48B"
+    },
+    "ethereum": {
+      "symbol": "ETH",
+      "name": "Ethereum",
+      "price": "$2,053.92",
+      "rawPrice": 2053.92,
+      "change": "-2.64%",
+      "rawChange": -2.63673,
+      "marketCap": "$247.74B",
+      "volume": "$13.38B"
+    },
+    "binancecoin": {
+      "symbol": "BNB",
+      "name": "BNB",
+      "price": "$627.1100",
+      "rawPrice": 627.11,
+      "change": "-1.11%",
+      "rawChange": -1.10848,
+      "marketCap": "$85.49B",
+      "volume": "$903.53M"
+    },
+    "solana": {
+      "symbol": "SOL",
+      "name": "Solana",
+      "price": "$86.4000",
+      "rawPrice": 86.4,
+      "change": "-2.86%",
+      "rawChange": -2.86238,
+      "marketCap": "$49.43B",
+      "volume": "$2.43B"
+    },
+    "cardano": {
+      "symbol": "ADA",
+      "name": "Cardano",
+      "price": "$0.251522",
+      "rawPrice": 0.251522,
+      "change": "-2.74%",
+      "rawChange": -2.73943,
+      "marketCap": "$9.27B",
+      "volume": "$370.51M"
+    },
+    "ripple": {
+      "symbol": "XRP",
+      "name": "XRP",
+      "price": "$1.3800",
+      "rawPrice": 1.38,
+      "change": "-2.61%",
+      "rawChange": -2.60897,
+      "marketCap": "$84.65B",
+      "volume": "$1.71B"
+    },
+    "dogecoin": {
+      "symbol": "DOGE",
+      "name": "Dogecoin",
+      "price": "$0.090719",
+      "rawPrice": 0.090719,
+      "change": "-1.77%",
+      "rawChange": -1.77393,
+      "marketCap": "$13.93B",
+      "volume": "$718.23M"
+    },
+    "polkadot": {
+      "symbol": "DOT",
+      "name": "Polkadot",
+      "price": "$1.4300",
+      "rawPrice": 1.43,
+      "change": "-2.67%",
+      "rawChange": -2.66546,
+      "marketCap": "$2.40B",
+      "volume": "$115.46M"
+    }
+  }
+}

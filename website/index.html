@@ -787,10 +787,11 @@
             { id: 'polkadot', symbol: 'DOT', name: 'Polkadot', icon: '●' },
         ];
 
-        const COINGECKO_KEY = 'CG-t1FPoEKsr2cq7jK6wuryTCeL';
-
+        // API endpoint（由 Cron Job 每 30 秒更新）
+        const PRICE_API_URL = '/api/prices';
+        
         let coinData = {};
-        let tickerHTML = '';
+        let lastCacheTime = null;
 
         function formatPrice(price) {
             if (price >= 1000) return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -819,7 +820,7 @@
             const grid = document.getElementById('liveGrid');
             grid.innerHTML = COINS.map(coin => {
                 const data = coinData[coin.id] || {};
-                const change = data.price_change_percentage_24h || 0;
+                const change = data.rawChange || 0;
                 const changeClass = getChangeClass(change);
                 return `
                 <div class="coin-card" id="card-${coin.id}">
@@ -831,12 +832,12 @@
                         </div>
                     </div>
                     <div class="coin-price-row">
-                        <div class="coin-price" id="price-${coin.id}">${formatPrice(data.current_price || 0)}</div>
+                        <div class="coin-price" id="price-${coin.id}">${data.price || formatPrice(0)}</div>
                         <div class="coin-change ${changeClass}" id="change-${coin.id}">${formatChange(change)}</div>
                     </div>
                     <div class="coin-stats">
-                        <span>🧱 MC: <span id="mc-${coin.id}">${formatMarketCap(data.market_cap || 0)}</span></span>
-                        <span>📊 Vol: <span id="vol-${coin.id}">${formatMarketCap(data.total_volume || 0)}</span></span>
+                        <span>🧱 MC: <span id="mc-${coin.id}">${data.marketCap || '-'}</span></span>
+                        <span>📊 Vol: <span id="vol-${coin.id}">${data.volume || '-'}</span></span>
                     </div>
                 </div>
                 `;
@@ -847,17 +848,16 @@
             const content = document.getElementById('tickerContent');
             const items = COINS.map(coin => {
                 const data = coinData[coin.id] || {};
-                const change = data.price_change_percentage_24h || 0;
+                const change = data.rawChange || 0;
                 const changeClass = getChangeClass(change);
                 return `
                 <div class="ticker-item">
                     <span class="symbol">${coin.symbol}</span>
-                    <span class="price">${formatPrice(data.current_price || 0)}</span>
+                    <span class="price">${data.price || '-'}</span>
                     <span class="change ${changeClass}">${formatChange(change)}</span>
                 </div>
                 `;
             }).join('');
-            // Duplicate for seamless scroll
             content.innerHTML = items + items;
         }
 
@@ -866,7 +866,7 @@
                 const data = coinData[coin.id];
                 if (!data) return;
 
-                const change = data.price_change_percentage_24h || 0;
+                const change = data.rawChange || 0;
                 const changeClass = getChangeClass(change);
 
                 const priceEl = document.getElementById(`price-${coin.id}`);
@@ -874,13 +874,13 @@
                 const mcEl = document.getElementById(`mc-${coin.id}`);
                 const volEl = document.getElementById(`vol-${coin.id}`);
 
-                if (priceEl) priceEl.textContent = formatPrice(data.current_price);
+                if (priceEl) priceEl.textContent = data.price;
                 if (changeEl) {
                     changeEl.textContent = formatChange(change);
                     changeEl.className = `coin-change ${changeClass}`;
                 }
-                if (mcEl) mcEl.textContent = formatMarketCap(data.market_cap);
-                if (volEl) volEl.textContent = formatMarketCap(data.total_volume);
+                if (mcEl) mcEl.textContent = data.marketCap;
+                if (volEl) volEl.textContent = data.volume;
             });
 
             document.getElementById('lastUpdate').textContent = '最後更新: ' + new Date().toLocaleTimeString('zh-TW');
@@ -889,18 +889,19 @@
 
         async function fetchPrices() {
             try {
-                const ids = COINS.map(c => c.id).join(',');
-                const resp = await fetch(
-                    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${ids}&order=market_cap_desc&per_page=20&page=1&sparkline=false&price_change_percentage=24h`,
-                    { headers: { 'x-cg-demo-api-key': COINGECKO_KEY } }
-                );
-                const data = await resp.json();
-                data.forEach(coin => {
-                    coinData[coin.id] = coin;
-                });
-                updateUI();
+                const resp = await fetch(PRICE_API_URL + '?t=' + Date.now());
+                const cache = await resp.json();
+                
+                // Only update if cache is newer
+                if (!lastCacheTime || cache.updated !== lastCacheTime) {
+                    lastCacheTime = cache.updated;
+                    COINS.forEach(coin => {
+                        coinData[coin.id] = cache.prices[coin.id] || {};
+                    });
+                    updateUI();
+                }
             } catch (e) {
-                console.error('Fetch error:', e);
+                console.error('Cache fetch error:', e);
             }
         }
 
@@ -908,9 +909,9 @@
         renderCards();
         renderTicker();
 
-        // Fetch immediately then every 10 minutes
+        // Fetch from local cache every 30 seconds
         fetchPrices();
-        setInterval(fetchPrices, 600000);
+        setInterval(fetchPrices, 30000);
     </script>
 </body>
 </html>
