@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代幣經濟學 - ClawCoin (CLAW)</title>
+    <meta name="description" content="ClawCoin 代幣經濟學詳細解析：代幣分配、質押獎勵、燃燒機制、解鎖時間表">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #F7931A;
+            --primary-dark: #E88A0C;
+            --secondary: #00D4AA;
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-card-hover: #1a1a25;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --border: #2a2a3a;
+            --gradient-primary: linear-gradient(135deg, #F7931A 0%, #FF6B35 100%);
+            --gradient-secondary: linear-gradient(135deg, #00D4AA 0%, #00B894 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 72px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+
+        .page-header {
+            padding: 140px 0 60px;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(36px, 6vw, 56px);
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .page-header h1 span {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        section {
+            padding: 60px 0;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .info-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .info-card .label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-card .value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Allocation Table */
+        .allocation-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .allocation-table th,
+        .allocation-table td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .allocation-table th {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .allocation-table td {
+            font-size: 15px;
+        }
+
+        .allocation-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-green {
+            background: rgba(0, 212, 170, 0.1);
+            color: var(--secondary);
+        }
+
+        .badge-orange {
+            background: rgba(247, 147, 26, 0.1);
+            color: var(--primary);
+        }
+
+        /* Chart Bars */
+        .chart-section {
+            margin-top: 32px;
+        }
+
+        .chart-bar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .chart-bar .label {
+            width: 140px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .chart-bar .bar {
+            flex: 1;
+            height: 40px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .chart-bar .bar-fill {
+            height: 100%;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding-right: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+            min-width: 60px;
+        }
+
+        .chart-bar.ecosystem .bar-fill { background: linear-gradient(90deg, #F7931A, #FF6B35); }
+        .chart-bar.community .bar-fill { background: linear-gradient(90deg, #00D4AA, #00B894); }
+        .chart-bar.liquidity .bar-fill { background: linear-gradient(90deg, #6C5CE7, #A29BFE); }
+        .chart-bar.treasury .bar-fill { background: linear-gradient(90deg, #E84393, #FD79A8); }
+        .chart-bar.private .bar-fill { background: linear-gradient(90deg, #0984E3, #74B9FF); }
+        .chart-bar.team .bar-fill { background: linear-gradient(90deg, #636E72, #B2BEC3); }
+
+        /* Staking */
+        .staking-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .staking-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+
+        .staking-card:hover {
+            border-color: var(--primary);
+        }
+
+        .staking-card .period {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .staking-card .apy {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .staking-card .lock {
+            font-size: 12px;
+            color: var(--secondary);
+        }
+
+        /* Vesting Timeline */
+        .vesting-timeline {
+            position: relative;
+            padding-left: 32px;
+        }
+
+        .vesting-timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--border);
+        }
+
+        .vesting-item {
+            position: relative;
+            margin-bottom: 32px;
+            padding: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .vesting-item::before {
+            content: '';
+            position: absolute;
+            left: -28px;
+            top: 24px;
+            width: 12px;
+            height: 12px;
+            background: var(--primary);
+            border-radius: 50%;
+            border: 2px solid var(--bg-dark);
+        }
+
+        .vesting-item.highlight::before {
+            background: var(--secondary);
+            box-shadow: 0 0 12px rgba(0, 212, 170, 0.5);
+        }
+
+        .vesting-item .time {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .vesting-item h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .vesting-item p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Utility */
+        .utility-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .utility-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .utility-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(247, 147, 26, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .utility-card h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .utility-card p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Deflation */
+        .deflation-box {
+            background: linear-gradient(135deg, rgba(247, 147, 26, 0.1) 0%, rgba(0, 212, 170, 0.1) 100%);
+            border: 1px solid var(--primary);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        .deflation-box .icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .deflation-box h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .deflation-box p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 48px 0;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .footer-copy {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .allocation-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .chart-bar .label {
+                width: 100px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <a href="index.html" class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="20" fill="url(#logoGrad)"/>
+                    <path d="M12 28C14 24 18 20 20 16C22 20 26 24 28 28" stroke="white" stroke-width="3" stroke-linecap="round"/>
+                    <circle cx="14" cy="22" r="2" fill="white"/>
+                    <circle cx="26" cy="22" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0" y1="0" x2="40" y2="40">
+                            <stop stop-color="#F7931A"/>
+                            <stop offset="1" stop-color="#FF6B35"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                ClawCoin
+            </a>
+            <a href="index.html" class="back-link">← 返回首頁</a>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1>代幣<span>經濟學</span></h1>
+            <p>ClawCoin 代幣經濟學詳細解析 — 為散戶投資者打造的永續經濟模型</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Basic Info -->
+        <section>
+            <div class="card">
+                <h3 style="font-size: 18px; margin-bottom: 24px;">代幣基本資訊</h3>
+                <div class="card-grid">
+                    <div class="info-card">
+                        <div class="label">代幣名稱</div>
+                        <div class="value">ClawCoin</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="label">代幣符號</div>
+                        <div class="value">CLAW</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="label">區塊鏈</div>
+                        <div class="value">BNB Chain</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="label">代幣標準</div>
+                        <div class="value">BEP-20</div>
+                    </div>
+                    <div class="info-card" style="grid-column: span 2;">
+                        <div class="label">總供應量</div>
+                        <div class="value" style="font-size: 36px;">1,000,000,000</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Allocation -->
+        <section>
+            <h2 class="section-title">📊 代幣分配</h2>
+            <div class="card">
+                <table class="allocation-table">
+                    <thead>
+                        <tr>
+                            <th>類別</th>
+                            <th>數量</th>
+                            <th>比例</th>
+                            <th>鎖倉規則</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>🌱 生態系統基金</td>
+                            <td>300,000,000</td>
+                            <td><span class="badge badge-orange">30%</span></td>
+                            <td>TGE 0%，第3個月起線性解鎖24個月</td>
+                        </tr>
+                        <tr>
+                            <td>👥 社群/空投</td>
+                            <td>200,000,000</td>
+                            <td><span class="badge badge-green">20%</span></td>
+                            <td>TGE 10%，其餘按月解鎖</td>
+                        </tr>
+                        <tr>
+                            <td>💧 流動性池</td>
+                            <td>150,000,000</td>
+                            <td>15%</td>
+                            <td>TGE 100% 釋放</td>
+                        </tr>
+                        <tr>
+                            <td>🏛️ OpenClaw 基金</td>
+                            <td>150,000,000</td>
+                            <td>15%</td>
+                            <td>TGE 0%，第12個月起線性解鎖24個月</td>
+                        </tr>
+                        <tr>
+                            <td>🏦 私募投資者</td>
+                            <td>100,000,000</td>
+                            <td>10%</td>
+                            <td>6個月懸崖，TGE 10%，其餘18個月線性釋放</td>
+                        </tr>
+                        <tr>
+                            <td>👨‍💻 團隊</td>
+                            <td>100,000,000</td>
+                            <td>10%</td>
+                            <td>12個月懸崖，第12個月起線性解鎖24個月</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="chart-section">
+                    <div class="chart-bar ecosystem">
+                        <span class="label">🌱 生態系統</span>
+                        <div class="bar"><div class="bar-fill" style="width: 30%;">30%</div></div>
+                    </div>
+                    <div class="chart-bar community">
+                        <span class="label">👥 社群/空投</span>
+                        <div class="bar"><div class="bar-fill" style="width: 20%;">20%</div></div>
+                    </div>
+                    <div class="chart-bar liquidity">
+                        <span class="label">💧 流動性池</span>
+                        <div class="bar"><div class="bar-fill" style="width: 15%;">15%</div></div>
+                    </div>
+                    <div class="chart-bar treasury">
+                        <span class="label">🏛️ OpenClaw基金</span>
+                        <div class="bar"><div class="bar-fill" style="width: 15%;">15%</div></div>
+                    </div>
+                    <div class="chart-bar private">
+                        <span class="label">🏦 私募投資者</span>
+                        <div class="bar"><div class="bar-fill" style="width: 10%;">10%</div></div>
+                    </div>
+                    <div class="chart-bar team">
+                        <span class="label">👨‍💻 團隊</span>
+                        <div class="bar"><div class="bar-fill" style="width: 10%;">10%</div></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Staking Rewards -->
+        <section>
+            <h2 class="section-title">💎 質押獎勵</h2>
+            <div class="staking-grid">
+                <div class="staking-card">
+                    <div class="period">30 天質押</div>
+                    <div class="apy">8%</div>
+                    <div class="lock">無鎖倉要求</div>
+                </div>
+                <div class="staking-card">
+                    <div class="period">90 天質押</div>
+                    <div class="apy">15%</div>
+                    <div class="lock">無鎖倉要求</div>
+                </div>
+                <div class="staking-card">
+                    <div class="period">180 天質押</div>
+                    <div class="apy">25%</div>
+                    <div class="lock">無鎖倉要求</div>
+                </div>
+                <div class="staking-card">
+                    <div class="period">365 天質押</div>
+                    <div class="apy">40%</div>
+                    <div class="lock">無鎖倉要求</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vesting Timeline -->
+        <section>
+            <h2 class="section-title">📅 解鎖時間表</h2>
+            <div class="card">
+                <div class="vesting-timeline">
+                    <div class="vesting-item highlight">
+                        <div class="time">TGE (第 0 個月)</div>
+                        <h4>初始流通</h4>
+                        <p>流動性池 150M (15%) + 社群空投 20M (2%) = 170M (17%)</p>
+                    </div>
+                    <div class="vesting-item">
+                        <div class="time">第 3 個月</div>
+                        <h4>生態系統基金開始釋放</h4>
+                        <p>300M 生態系統基金開始為期 24 個月的線性解鎖</p>
+                    </div>
+                    <div class="vesting-item">
+                        <div class="time">第 6 個月</div>
+                        <h4>私募投資者懸崖期滿</h4>
+                        <p>私募份額 TGE 10% 解鎖，其餘開始 18 個月線性釋放</p>
+                    </div>
+                    <div class="vesting-item">
+                        <div class="time">第 12 個月</div>
+                        <h4>團隊 & OpenClaw 基金</h4>
+                        <p>團隊份額（12個月懸崖期滿）和 OpenClaw 基金開始線性解鎖</p>
+                    </div>
+                    <div class="vesting-item">
+                        <div class="time">第 24 個月</div>
+                        <h4>全部代幣流通</h4>
+                        <p>1,000,000,000 CLAW 100% 完全流通</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Token Utility -->
+        <section>
+            <h2 class="section-title">⚡ 代幣用途</h2>
+            <div class="utility-grid">
+                <div class="utility-card">
+                    <div class="utility-icon">🗳️</div>
+                    <div>
+                        <h4>治理投票</h4>
+                        <p>每 1 CLAW = 1 票，參與鏈上治理，決定生態系統未來</p>
+                    </div>
+                </div>
+                <div class="utility-card">
+                    <div class="utility-icon">💎</div>
+                    <div>
+                        <h4>質押質押</h4>
+                        <p>質押 CLAW 保障網路安全，獲得高達 40% 年化獎勵</p>
+                    </div>
+                </div>
+                <div class="utility-card">
+                    <div class="utility-icon">💳</div>
+                    <div>
+                        <h4>生態支付</h4>
+                        <p>DApp 內結算貨幣，支付服務費用，享受手續費折扣</p>
+                    </div>
+                </div>
+                <div class="utility-card">
+                    <div class="utility-icon">🔐</div>
+                    <div>
+                        <h4>獨家訪問</h4>
+                        <p>解鎖高級功能、早鳥服務、獨家 NFT 等會員福利</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Deflation Mechanism -->
+        <section>
+            <h2 class="section-title">🔥 通貨緊縮機制</h2>
+            <div class="card">
+                <div class="utility-grid">
+                    <div class="utility-card">
+                        <div class="utility-icon">💸</div>
+                        <div>
+                            <h4>交易手續費燃燒</h4>
+                            <p>每筆交易自動燃燒 2% CLAW 代幣</p>
+                        </div>
+                    </div>
+                    <div class="utility-card">
+                        <div class="utility-icon">🏛️</div>
+                        <div>
+                            <h4>回購銷毀</h4>
+                            <p>季度 OpenClaw 基金利潤回購並销毁代幣</p>
+                        </div>
+                    </div>
+                    <div class="utility-card">
+                        <div class="utility-icon">⛏️</div>
+                        <div>
+                            <h4>質押燃燒</h4>
+                            <p>質押獎勵領取時，5% 獎勵自動燃燒</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="deflation-box">
+                    <div class="icon">📉</div>
+                    <h3>減半機制</h3>
+                    <p>每質押獎勵派發達 50,000,000 CLAW（總供應量 5%），質押獎勵減少 50%。預計每 8-12 個月觸發一次，確保長期通貨緊縮。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Circulation -->
+        <section>
+            <h2 class="section-title">📈 流通量預估</h2>
+            <div class="card">
+                <div class="card-grid">
+                    <div class="info-card">
+                        <div class="label">TGE 初始流通</div>
+                        <div class="value">170M</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="label">TGE 流通率</div>
+                        <div class="value">17%</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="label">第 12 個月流通</div>
+                        <div class="value">~380M</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="label">第 12 個月流通率</div>
+                        <div class="value">~38%</div>
+                    </div>
+                    <div class="info-card" style="grid-column: span 2;">
+                        <div class="label">第 24 個月 +</div>
+                        <div class="value" style="color: var(--secondary);">1,000M (100%)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-copy">
+                    © 2026 ClawCoin. All rights reserved.
+                </div>
+                <div class="footer-copy">
+                    <a href="index.html" style="color: var(--primary); text-decoration: none;">← 返回首頁</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

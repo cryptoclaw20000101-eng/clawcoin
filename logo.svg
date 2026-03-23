@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <!-- Background -->
+  <rect width="400" height="400" fill="#1a1a2e" rx="40"/>
+  
+  <!-- Outer glow ring -->
+  <circle cx="200" cy="180" r="130" fill="none" stroke="#f0b90b" stroke-width="4" opacity="0.6"/>
+  
+  <!-- Claw shape - main body -->
+  <path d="M200 80 L260 160 L240 160 L270 200 L250 200 L280 240 L230 240 L200 300 L170 240 L120 240 L150 200 L130 200 L160 160 L140 160 Z" fill="#f0b90b"/>
+  
+  <!-- Claw - inner detail -->
+  <path d="M200 100 L240 160 L225 160 L250 195 L235 195 L255 230 L210 230 L200 265 L190 230 L145 230 L165 195 L150 195 L175 160 L160 160 Z" fill="#1a1a2e"/>
+  
+  <!-- CLAW text -->
+  <text x="200" y="340" font-family="Arial, sans-serif" font-size="52" font-weight="bold" fill="#f0b90b" text-anchor="middle">CLAW</text>
+  
+  <!-- Coin tag -->
+  <text x="200" y="375" font-family="Arial, sans-serif" font-size="16" fill="#ffffff" opacity="0.7" text-anchor="middle">CLAW COIN</text>
+  
+  <!-- Sparkle effects -->
+  <circle cx="80" cy="100" r="3" fill="#ffffff" opacity="0.8"/>
+  <circle cx="320" cy="120" r="2" fill="#ffffff" opacity="0.6"/>
+  <circle cx="60" cy="250" r="2" fill="#ffffff" opacity="0.5"/>
+  <circle cx="340" cy="280" r="3" fill="#ffffff" opacity="0.7"/>
+</svg>

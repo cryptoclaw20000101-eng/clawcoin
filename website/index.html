@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClawCoin (CLAW) - OpenClaw 生態的區塊鏈核心應用</title>
+    <meta name="description" content="ClawCoin 是 OpenClaw 生態的區塊鏈核心應用，建立在 BNB Smart Chain 上。CLAW 代幣總供應量 10 億枚。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #F0B90B;
+            --primary-dark: #E8A800;
+            --secondary: #00D4AA;
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-card-hover: #1a1a25;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --border: #2a2a3a;
+            --gradient-primary: linear-gradient(135deg, #F0B90B 0%, #00D4AA 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* Live Crypto Ticker */
+        .crypto-ticker {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            right: 0;
+            background: rgba(18, 18, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 999;
+            overflow: hidden;
+        }
+
+        .ticker-wrapper {
+            display: flex;
+            animation: scroll 20s linear infinite;
+        }
+
+        .ticker-wrapper:hover { animation-play-state: paused; }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            white-space: nowrap;
+            border-right: 1px solid var(--border);
+        }
+
+        .ticker-item .symbol {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .ticker-item .price {
+            font-weight: 600;
+        }
+
+        .ticker-item .change {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .ticker-item .change.up {
+            background: rgba(0, 212, 170, 0.2);
+            color: var(--secondary);
+        }
+
+        .ticker-item .change.down {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .ticker-item .coin-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        /* Nav */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--gradient-primary);
+            color: #000;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(240, 185, 11, 0.3);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 160px 24px 80px;
+            background: radial-gradient(ellipse at center, rgba(240, 185, 11, 0.1) 0%, transparent 70%);
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(48px, 8vw, 80px);
+            font-weight: 900;
+            margin-bottom: 16px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 32px;
+            line-height: 1.8;
+        }
+
+        .hero-badges {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .badge {
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .badge.highlight {
+            background: rgba(240, 185, 11, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Live Price Section */
+        .live-prices {
+            padding: 80px 0;
+            background: var(--bg-card);
+        }
+
+        .live-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .coin-card {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s;
+        }
+
+        .coin-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(240, 185, 11, 0.15);
+        }
+
+        .coin-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .coin-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .coin-name {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .coin-symbol {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .coin-price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 8px;
+        }
+
+        .coin-price {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .coin-change {
+            font-size: 14px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 8px;
+        }
+
+        .coin-change.up {
+            background: rgba(0, 212, 170, 0.2);
+            color: var(--secondary);
+        }
+
+        .coin-change.down {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .coin-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .coin-stats span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .last-update {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .pulse {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--secondary);
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        /* Sections */
+        section { padding: 80px 0; }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 40px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 18px;
+            margin-bottom: 48px;
+        }
+
+        /* About */
+        .about {
+            background: var(--bg-card);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .about-card {
+            background: var(--bg-dark);
+            padding: 32px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            transition: border-color 0.3s, transform 0.3s;
+        }
+
+        .about-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+        }
+
+        .about-card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: var(--primary);
+        }
+
+        /* Tokenomics */
+        .token-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .token-item {
+            background: var(--bg-card);
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .token-item .percent {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .token-item .label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .token-item .amount {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        /* Roadmap */
+        .roadmap {
+            background: var(--bg-card);
+        }
+
+        .roadmap-timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .roadmap-item {
+            background: var(--bg-dark);
+            padding: 24px;
+            border-radius: 16px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .roadmap-item h3 {
+            color: var(--primary);
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .roadmap-item ul {
+            list-style: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .roadmap-item li {
+            padding: 4px 0;
+        }
+
+        .roadmap-item li::before {
+            content: "→ ";
+            color: var(--secondary);
+        }
+
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            padding: 32px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Contact */
+        .contact {
+            background: var(--bg-card);
+            text-align: center;
+        }
+
+        .contact-links {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 24px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: border-color 0.3s;
+        }
+
+        .contact-link:hover { border-color: var(--primary); }
+
+        /* Footer */
+        footer {
+            padding: 32px 0;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 36px; }
+            .hero p { font-size: 18px; }
+            .section-title { font-size: 28px; }
+            .crypto-ticker { top: 52px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Crypto Ticker -->
+    <div class="crypto-ticker" id="ticker">
+        <div class="ticker-wrapper" id="tickerContent"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <a href="#" class="logo">
+                <img src="cyber-lobster-logo.png" alt="ClawCoin" onerror="this.style.display='none'">
+                🦐 ClawCoin
+            </a>
+            <ul class="nav-links">
+                <li><a href="#prices">實價</a></li>
+                <li><a href="#about">關於</a></li>
+                <li><a href="#ecosystem">生態</a></li>
+                <li><a href="#tokenomics">代幣</a></li>
+                <li><a href="#roadmap">路線圖</a></li>
+                <li><a href="#fundraise">贊助</a></li>
+                <li><a href="#contact">聯絡</a></li>
+            </ul>
+            <a href="#contact" class="btn">加入社群</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <h1>ClawCoin (CLAW)</h1>
+            <p>區塊鏈生態系統 — OpenClaw 生態的未來核心</p>
+            <div class="hero-badges">
+                <span class="badge highlight">🚀 即將上市</span>
+                <span class="badge">🔗 BNB Smart Chain</span>
+                <span class="badge">💰 10 億代幣</span>
+                <span class="badge">🦐 社群驅動</span>
+            </div>
+            <a href="#fundraise" class="btn">支持我們 →</a>
+            <div style="margin-top: 40px;">
+                <img src="dreamai-hero.jpg" alt="ClawCoin Hero" style="max-width: 100%; border-radius: 16px; box-shadow: 0 20px 60px rgba(240, 185, 11, 0.2);">
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Prices -->
+    <section id="prices" class="live-prices">
+        <div class="container">
+            <h2 class="section-title">🔥 實時加密貨幣行情</h2>
+            <p class="section-subtitle">每秒自動更新，即時掌握市場脈動</p>
+            <div class="live-grid" id="liveGrid"></div>
+            <div class="last-update">
+                <span class="pulse"></span>
+                <span id="lastUpdate">載入中...</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">關於 ClawCoin</h2>
+            <p class="section-subtitle">OpenClaw 生態的價值結算層與激勵引擎</p>
+            <div class="about-grid">
+                <div class="about-card">
+                    <h3>🤖 為 AI Agent 經濟而生</h3>
+                    <p>ClawCoin 是第一個專為 OpenClaw 生態設計的價值結算代幣。讓 AI Agent 之間的服務交換、激勵分配、任務結算都能在鏈上完成。</p>
+                </div>
+                <div class="about-card">
+                    <h3>🔗 區塊鏈基礎</h3>
+                    <p>建立在 BNB Smart Chain (BSC) 上，享受 3 秒區塊確認、低 Gas 費用（&lt;$0.1）和成熟的 DeFi 生態。與 BSC 完全相容。</p>
+                </div>
+                <div class="about-card">
+                    <h3>💰 生態激勵</h3>
+                    <p>CLAW 代幣支撐 OpenClaw 生態內的所有價值流動：Agent 服務費、質押獎勵、生態基金、國庫激勵。持有 CLAW = 持有生態份額。</p>
+                </div>
+                <div class="about-card">
+                    <h3>🔥 永續機制</h3>
+                    <p>2% 自動燃燒 + 最高 40% 質押 APY。供應量固定 10 億枚，流通量透過燃燒機制持續減少，價值捕捉明確。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ecosystem -->
+    <section id="ecosystem">
+        <div class="container">
+            <h2 class="section-title">ClawCoin 生態應用</h2>
+            <p class="section-subtitle">CLAW 代幣在 OpenClaw 生態中的實際應用場景</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤝</div>
+                    <h3>Agent 服務結算</h3>
+                    <p>AI Agent 之間的任務委託、服務交換，直接用 CLAW 即時結算。無需第三方，干擾零。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>質押驗證獎勵</h3>
+                    <p>質押 CLAW 保障網路安全，獲得高達 40% APY 獎勵。持有 = 挖礦。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>DAO 治理投票</h3>
+                    <p>每一個 CLAW = 一票。參與 OpenClaw 生態的重大決策，包括國庫運用、合約升級、生態方向。</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💎</div>
+                    <h3>價值儲存</h3>
+                    <p>CLAW 代幣供應量固定，2% 自動燃燒持續減少流通量。長期持有超有價值。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tokenomics -->
+    <section id="tokenomics">
+        <div class="container">
+            <h2 class="section-title">代幣經濟學</h2>
+            <p class="section-subtitle">透明、公平、可持續的代幣分配</p>
+            <div class="token-grid">
+                <div class="token-item">
+                    <div class="percent">30%</div>
+                    <div class="label">生態系統基金</div>
+                    <div class="amount">300,000,000 CLAW</div>
+                </div>
+                <div class="token-item">
+                    <div class="percent">20%</div>
+                    <div class="label">社群/空投</div>
+                    <div class="amount">200,000,000 CLAW</div>
+                </div>
+                <div class="token-item">
+                    <div class="percent">15%</div>
+                    <div class="label">流動性池</div>
+                    <div class="amount">150,000,000 CLAW</div>
+                </div>
+                <div class="token-item">
+                    <div class="percent">15%</div>
+                    <div class="label">OpenClaw 基金</div>
+                    <div class="amount">150,000,000 CLAW</div>
+                </div>
+                <div class="token-item">
+                    <div class="percent">10%</div>
+                    <div class="label">私募投資者</div>
+                    <div class="amount">100,000,000 CLAW</div>
+                </div>
+                <div class="token-item">
+                    <div class="percent">10%</div>
+                    <div class="label">團隊</div>
+                    <div class="amount">100,000,000 CLAW</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap -->
+    <section id="roadmap" class="roadmap">
+        <div class="container">
+            <h2 class="section-title">發展路線圖</h2>
+            <p class="section-subtitle">OpenClaw 生態 × CEX 掛牌雙軌前進</p>
+            <div class="roadmap-timeline">
+                <div class="roadmap-item">
+                    <h3>Q1 2026</h3>
+                    <ul>
+                        <li>白皮書 v1.0 發布</li>
+                        <li>官網上線</li>
+                        <li>OpenClaw 整合規劃</li>
+                    </ul>
+                </div>
+                <div class="roadmap-item">
+                    <h3>Q2 2026</h3>
+                    <ul>
+                        <li>ICO / 預售</li>
+                        <li>TGE 代幣生成</li>
+                        <li>CLAW-Agent 結算測試網</li>
+                    </ul>
+                </div>
+                <div class="roadmap-item">
+                    <h3>Q3 2026</h3>
+                    <ul>
+                        <li>DAO 治理上線</li>
+                        <li>OpenClaw Agent 全面支援</li>
+                        <li>首批合作 Agent 接入</li>
+                    </ul>
+                </div>
+                <div class="roadmap-item">
+                    <h3>Q4 2026</h3>
+                    <ul>
+                        <li>CEX 掛牌申請</li>
+                        <li>跨鏈橋測試</li>
+                        <li>全球生態擴張</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fundraising -->
+    <section id="fundraise" style="background: linear-gradient(135deg, rgba(240, 185, 11, 0.1) 0%, rgba(0, 212, 170, 0.1) 100%);">
+        <div class="container">
+            <h2 class="section-title">🦐 支持 ClawCoin 上市</h2>
+            <p class="section-subtitle">贊助我們，一起邁向上市目標</p>
+            <div style="background: var(--bg-dark); border: 2px solid var(--primary); border-radius: 16px; padding: 32px; max-width: 600px; margin: 0 auto; text-align: center;">
+                <p style="color: var(--text-secondary); margin-bottom: 16px; font-size: 14px;">贊助地址（BSC - BNB Smart Chain）</p>
+                <div style="background: var(--bg-card); border-radius: 8px; padding: 16px; font-family: monospace; font-size: 14px; word-break: break-all; color: var(--primary); margin-bottom: 16px;">
+                    0xc2c04677CDC011B57c7f253E3a2Ab7f5920E8B15
+                </div>
+                <button onclick="navigator.clipboard.writeText('0xc2c04677CDC011B57c7f253E3a2Ab7f5920E8B15'); this.textContent='已複製 ✓'; setTimeout(()=>this.textContent='複製地址',2000);" style="background: var(--gradient-primary); border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; color: #000;">
+                    複製地址
+                </button>
+                <p style="color: var(--text-secondary); margin-top: 16px; font-size: 12px;">
+                    支援 ETH、BNB、USDT (BEP-20) | 任何贊助都是我們前進的動力！
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">聯絡我們</h2>
+            <p class="section-subtitle">加入 ClawCoin 社群，一起邁向成功</p>
+            <div class="contact-links">
+                <a href="https://t.me/clawcoin" class="contact-link" target="_blank">
+                    📱 Telegram
+                </a>
+                <a href="https://twitter.com/ClawCoinOfficial" class="contact-link" target="_blank">
+                    🐦 Twitter
+                </a>
+                <a href="mailto:contact@clawcoin.xyz" class="contact-link">
+                    📧 Email
+                </a>
+            </div>
+            <p style="margin-top: 32px; color: var(--text-secondary); font-size: 14px;">
+                網站：www.clawcoin.xyz
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>© 2026 ClawCoin. All rights reserved.</p>
+            <p style="margin-top: 8px;">🦐 OpenClaw 生態的區塊鏈核心應用</p>
+        </div>
+    </footer>
+
+    <script>
+        const COINS = [
+            { id: 'bitcoin', symbol: 'BTC', name: 'Bitcoin', icon: '₿' },
+            { id: 'ethereum', symbol: 'ETH', name: 'Ethereum', icon: 'Ξ' },
+            { id: 'binancecoin', symbol: 'BNB', name: 'BNB', icon: 'B' },
+            { id: 'solana', symbol: 'SOL', name: 'Solana', icon: '◎' },
+            { id: 'cardano', symbol: 'ADA', name: 'Cardano', icon: '₳' },
+            { id: 'ripple', symbol: 'XRP', name: 'XRP', icon: 'X' },
+            { id: 'dogecoin', symbol: 'DOGE', name: 'Dogecoin', icon: 'Ð' },
+            { id: 'polkadot', symbol: 'DOT', name: 'Polkadot', icon: '●' },
+        ];
+
+        const COINGECKO_KEY = 'CG-t1FPoEKsr2cq7jK6wuryTCeL';
+
+        let coinData = {};
+        let tickerHTML = '';
+
+        function formatPrice(price) {
+            if (price >= 1000) return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            if (price >= 1) return '$' + price.toFixed(4);
+            if (price >= 0.01) return '$' + price.toFixed(6);
+            return '$' + price.toFixed(8);
+        }
+
+        function formatChange(change) {
+            const sign = change >= 0 ? '+' : '';
+            return sign + change.toFixed(2) + '%';
+        }
+
+        function formatMarketCap(mc) {
+            if (mc >= 1e12) return '$' + (mc / 1e12).toFixed(2) + 'T';
+            if (mc >= 1e9) return '$' + (mc / 1e9).toFixed(2) + 'B';
+            if (mc >= 1e6) return '$' + (mc / 1e6).toFixed(2) + 'M';
+            return '$' + mc.toLocaleString();
+        }
+
+        function getChangeClass(change) {
+            return change >= 0 ? 'up' : 'down';
+        }
+
+        function renderCards() {
+            const grid = document.getElementById('liveGrid');
+            grid.innerHTML = COINS.map(coin => {
+                const data = coinData[coin.id] || {};
+                const change = data.price_change_percentage_24h || 0;
+                const changeClass = getChangeClass(change);
+                return `
+                <div class="coin-card" id="card-${coin.id}">
+                    <div class="coin-header">
+                        <div class="coin-icon" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold;">${coin.icon}</div>
+                        <div>
+                            <div class="coin-name">${coin.name}</div>
+                            <div class="coin-symbol">${coin.symbol}</div>
+                        </div>
+                    </div>
+                    <div class="coin-price-row">
+                        <div class="coin-price" id="price-${coin.id}">${formatPrice(data.current_price || 0)}</div>
+                        <div class="coin-change ${changeClass}" id="change-${coin.id}">${formatChange(change)}</div>
+                    </div>
+                    <div class="coin-stats">
+                        <span>🧱 MC: <span id="mc-${coin.id}">${formatMarketCap(data.market_cap || 0)}</span></span>
+                        <span>📊 Vol: <span id="vol-${coin.id}">${formatMarketCap(data.total_volume || 0)}</span></span>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function renderTicker() {
+            const content = document.getElementById('tickerContent');
+            const items = COINS.map(coin => {
+                const data = coinData[coin.id] || {};
+                const change = data.price_change_percentage_24h || 0;
+                const changeClass = getChangeClass(change);
+                return `
+                <div class="ticker-item">
+                    <span class="symbol">${coin.symbol}</span>
+                    <span class="price">${formatPrice(data.current_price || 0)}</span>
+                    <span class="change ${changeClass}">${formatChange(change)}</span>
+                </div>
+                `;
+            }).join('');
+            // Duplicate for seamless scroll
+            content.innerHTML = items + items;
+        }
+
+        function updateUI() {
+            COINS.forEach(coin => {
+                const data = coinData[coin.id];
+                if (!data) return;
+
+                const change = data.price_change_percentage_24h || 0;
+                const changeClass = getChangeClass(change);
+
+                const priceEl = document.getElementById(`price-${coin.id}`);
+                const changeEl = document.getElementById(`change-${coin.id}`);
+                const mcEl = document.getElementById(`mc-${coin.id}`);
+                const volEl = document.getElementById(`vol-${coin.id}`);
+
+                if (priceEl) priceEl.textContent = formatPrice(data.current_price);
+                if (changeEl) {
+                    changeEl.textContent = formatChange(change);
+                    changeEl.className = `coin-change ${changeClass}`;
+                }
+                if (mcEl) mcEl.textContent = formatMarketCap(data.market_cap);
+                if (volEl) volEl.textContent = formatMarketCap(data.total_volume);
+            });
+
+            document.getElementById('lastUpdate').textContent = '最後更新: ' + new Date().toLocaleTimeString('zh-TW');
+            renderTicker();
+        }
+
+        async function fetchPrices() {
+            try {
+                const ids = COINS.map(c => c.id).join(',');
+                const resp = await fetch(
+                    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${ids}&order=market_cap_desc&per_page=20&page=1&sparkline=false&price_change_percentage=24h`,
+                    { headers: { 'x-cg-demo-api-key': COINGECKO_KEY } }
+                );
+                const data = await resp.json();
+                data.forEach(coin => {
+                    coinData[coin.id] = coin;
+                });
+                updateUI();
+            } catch (e) {
+                console.error('Fetch error:', e);
+            }
+        }
+
+        // Initial render
+        renderCards();
+        renderTicker();
+
+        // Fetch immediately then every 10 minutes
+        fetchPrices();
+        setInterval(fetchPrices, 600000);
+    </script>
+</body>
+</html>
