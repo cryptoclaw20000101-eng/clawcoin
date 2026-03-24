@@ -1,0 +1,14 @@
+{
+  "name": "clawcoin-monitoring",
+  "version": "1.0.0",
+  "description": "ClawCoin whale monitoring",
+  "main": "whale-monitor.js",
+  "scripts": {
+    "start": "node whale-monitor.js",
+    "watch": "node whale-monitor.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "dotenv": "^16.0.0"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "clawcoin-technical-analysis",
+  "version": "1.0.0",
+  "description": "ClawCoin technical analysis module",
+  "main": "indicators.js",
+  "scripts": {
+    "start": "node indicators.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "dotenv": "^16.0.0"
+  }
+}

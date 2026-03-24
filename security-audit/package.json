@@ -1,0 +1,10 @@
+{
+  "name": "clawcoin-security-audit",
+  "version": "1.0.0",
+  "description": "ClawCoin security audit tools",
+  "main": "audit-checker.js",
+  "scripts": {
+    "start": "node audit-checker.js"
+  },
+  "dependencies": {}
+}

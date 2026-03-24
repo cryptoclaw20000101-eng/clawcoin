@@ -2,245 +2,185 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
- * @title ClawCoin (CLAW)
- * @dev BEP-20 Token for ClawCoin Ecosystem
+ * @title ClawCoin ($CLAW) - Meme Coin
+ * @dev BEP-20 Meme Coin on BNB Chain
  * 
- * 代幣分配：
- * - 生態系統基金: 30% (300,000,000 CLAW) - 3個月 cliff, 24個月線性解鎖
- * - 社群/空投: 20% (200,000,000 CLAW) - TGE 10%, 其餘按月解鎖
- * - 流動性池: 15% (150,000,000 CLAW) - 無鎖倉
- * - 私募投資者: 10% (100,000,000 CLAW) - 6個月 cliff
- * - OpenClaw基金: 15% (150,000,000 CLAW) - 12個月 cliff, 24個月線性解鎖
- * - 團隊: 10% (100,000,000 CLAW) - 12個月 cliff
+ * 🎯 代幣經濟：
+ * - 總供應量: 1,000,000,000 (10億) CLAW - 固定，燒毀後遞減
+ * - 每筆轉帳燃燒 2%
+ * - 流動性池: 50%
+ * - 社群空投: 50%（無鎖倉）
+ * - 無私募、無團隊份額
+ * 
+ * 🦐 Meme Coin 特點：燃燒機制 + 社群驅動
  */
-contract ClawCoin is ERC20, ERC20Permit, AccessControl, Pausable, ReentrancyGuard {
+contract ClawCoin is ERC20, ERC20Burnable, Ownable {
     
     // ============ Constants ============
-    uint256 public constant TOTAL_SUPPLY = 1_000_000_000 * 10**18; // 10億 CLAW
-    uint8   public constant DECIMALS = 18;
-    
-    // ============ Roles ============
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
-    bytes32 public constant OPERATOR_ROLE = keccak256("OPERATOR_ROLE");
+    uint256 public constant INITIAL_SUPPLY = 1_000_000_000 * 10**18;
+    uint256 public constant BURN_RATE = 200; // 2% = 200/10000
     
     // ============ State ============
-    bool public isInitialized = false;
-    
-    // 團隊錢包地址（部署時設定）
-    address public ecosystemFund;
-    address public communityAirdrop;
-    address public liquidityPool;
-    address public privateInvestors;
-    address public openClawFund;
-    address public teamWallet;
-    
-    // 時間鎖狀態
-    uint256 public launchTime;
-    
-    // 解鎖狀態標記
-    mapping(address => uint256) public lockedAmount;
-    mapping(address => uint256) public vestingStart;
-    mapping(address => uint256) public vestingDuration;
+    bool    public isInitialized   = false;
+    address public lpPair          = address(0);
+    address public marketingWallet  = address(0);
+    address public constant DEAD_ADDRESS = address(0xdead);
+    bool    public burnEnabled     = true;
+    uint256 public totalBurned      = 0;
     
     // ============ Events ============
-    event Initialized(
-        address indexed ecosystemFund,
-        address indexed communityAirdrop,
-        address indexed liquidityPool,
-        address privateInvestors,
-        address openClawFund,
-        address teamWallet
-    );
+    event TokensBurned(address indexed from, uint256 amount, uint256 burnedAmount);
+    event MarketingWalletUpdated(address indexed oldWallet, address indexed newWallet);
+    event BurnToggled(bool enabled);
+    event LpPairUpdated(address indexed oldPair, address indexed newPair);
     
-    event TokensLocked(address indexed beneficiary, uint256 amount, uint256 startTime, uint256 duration);
-    event TokensUnlocked(address indexed beneficiary, uint256 amount);
-    event TeamWalletUpdated(address indexed oldWallet, address indexed newWallet);
+    // ============ Storage Slot Helpers (OZ ERC20 v4 layout) ============
+    // OZ ERC20 storage layout:
+    // slot 0: _totalSupply (uint256)
+    // slot 1: _balances (mapping)
+    // slot 2: _allowances (mapping)
+    // slot 3: _name (string)
+    // slot 4: _symbol (string)
+    // slot 5: _decimals (uint8)
     
-    // ============ Modifiers ============
-    modifier onlyInitialized() {
-        require(isInitialized, "ClawCoin: not initialized");
-        _;
+    function _balanceOf(address account) internal view returns (uint256) {
+        return _getBoolSlot(keccak256(abi.encode(account, uint256(1))));
+    }
+    
+    function _setBalance(address account, uint256 newBalance) private {
+        _setUintSlot(keccak256(abi.encode(account, uint256(1))), newBalance);
+    }
+    
+    function _setTotalSupply(uint256 newSupply) private {
+        _setUintSlot(bytes32(uint256(0)), newSupply);
+    }
+    
+    function _getUintSlot(bytes32 slot) internal view returns (uint256 r) {
+        assembly { r := sload(slot) }
+    }
+    
+    function _setUintSlot(bytes32 slot, uint256 value) private {
+        assembly { sstore(slot, value) }
+    }
+    
+    function _getBoolSlot(bytes32 slot) internal view returns (uint256 r) {
+        assembly { r := sload(slot) }
     }
     
     // ============ Constructor ============
-    constructor() 
-        ERC20("ClawCoin", "CLAW") 
-        ERC20Permit("ClawCoin") 
-    {
-        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(MINTER_ROLE, msg.sender);
-        _grantRole(BURNER_ROLE, msg.sender);
-        _grantRole(OPERATOR_ROLE, msg.sender);
-        
-        launchTime = block.timestamp;
-    }
+    constructor() ERC20("ClawCoin", "CLAW") Ownable() {}
     
     // ============ Initialization ============
-    /**
-     * @dev 初始化代幣分配（只能調用一次）
-     * @param _ecosystemFund 生態系統基金
-     * @param _communityAirdrop 社群/空投
-     * @param _liquidityPool 流動性池
-     * @param _privateInvestors 私募投資者
-     * @param _openClawFund OpenClaw基金
-     * @param _teamWallet 團隊錢包
-     */
-    function initialize(
-        address _ecosystemFund,
-        address _communityAirdrop,
-        address _liquidityPool,
-        address _privateInvestors,
-        address _openClawFund,
-        address _teamWallet
-    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function initialize(address _marketingWallet, address _lpPair) external onlyOwner {
         require(!isInitialized, "ClawCoin: already initialized");
-        require(_ecosystemFund != address(0), "ClawCoin: zero address");
-        require(_communityAirdrop != address(0), "ClawCoin: zero address");
-        require(_liquidityPool != address(0), "ClawCoin: zero address");
-        require(_privateInvestors != address(0), "ClawCoin: zero address");
-        require(_openClawFund != address(0), "ClawCoin: zero address");
-        require(_teamWallet != address(0), "ClawCoin: zero address");
+        require(_marketingWallet != address(0), "ClawCoin: zero marketing wallet");
         
-        ecosystemFund = _ecosystemFund;
-        communityAirdrop = _communityAirdrop;
-        liquidityPool = _liquidityPool;
-        privateInvestors = _privateInvestors;
-        openClawFund = _openClawFund;
-        teamWallet = _teamWallet;
+        marketingWallet = _marketingWallet;
+        lpPair          = _lpPair != address(0) ? _lpPair : DEAD_ADDRESS;
         
-        // ============ 代幣分配 ============
+        // 流動性池 50% → DEAD（LP 建立後置換）
+        _mint(DEAD_ADDRESS, INITIAL_SUPPLY * 50 / 100);  // 5億
         
-        // 流動性池 15% - 無鎖倉，TGE 100%
-        _mint(liquidityPool, TOTAL_SUPPLY * 15 / 100);
-        
-        // 社群/空投 20% - TGE 10%
-        uint256 communityTGE = TOTAL_SUPPLY * 20 / 100 * 10 / 100;
-        _mint(communityAirdrop, communityTGE);
-        // 其餘 18% 線性解鎖（12個月）
-        _lockTokens(communityAirdrop, TOTAL_SUPPLY * 20 / 100 - communityTGE, 365 days);
-        
-        // 私募投資者 10% - 6個月 cliff
-        _mint(privateInvestors, TOTAL_SUPPLY * 10 / 100);
-        _lockTokens(privateInvestors, TOTAL_SUPPLY * 10 / 100, 0 seconds); // cliff = 0, 需手動解鎖
-        
-        // 生態系統基金 30% - 3個月 cliff, 24個月線性解鎖
-        _mint(ecosystemFund, TOTAL_SUPPLY * 30 / 100);
-        _lockTokens(ecosystemFund, TOTAL_SUPPLY * 30 / 100, 730 days);
-        
-        // OpenClaw基金 15% - 12個月 cliff, 24個月線性解鎖
-        _mint(openClawFund, TOTAL_SUPPLY * 15 / 100);
-        _lockTokens(openClawFund, TOTAL_SUPPLY * 15 / 100, 730 days);
-        
-        // 團隊 10% - 12個月 cliff
-        _mint(teamWallet, TOTAL_SUPPLY * 10 / 100);
-        _lockTokens(teamWallet, TOTAL_SUPPLY * 10 / 100, 730 days);
+        // 社群/空投 50% → Owner
+        _mint(owner(), INITIAL_SUPPLY * 50 / 100);         // 5億
         
         isInitialized = true;
-        
-        emit Initialized(
-            _ecosystemFund,
-            _communityAirdrop,
-            _liquidityPool,
-            _privateInvestors,
-            _openClawFund,
-            _teamWallet
-        );
     }
     
-    // ============ Locking Mechanism ============
-    function _lockTokens(address beneficiary, uint256 amount, uint256 duration) internal {
-        if (amount > 0 && duration > 0) {
-            lockedAmount[beneficiary] = amount;
-            vestingStart[beneficiary] = block.timestamp;
-            vestingDuration[beneficiary] = duration;
-            emit TokensLocked(beneficiary, amount, block.timestamp, duration);
-        }
-    }
-    
-    function getLockedAmount(address beneficiary) public view returns (uint256) {
-        if (lockedAmount[beneficiary] == 0) return 0;
+    // ============ Transfer Override with 2% Burn ============
+    /**
+     * @dev 重寫 _transfer，內嵌 2% 燃燒邏輯
+     * 
+     * 白名單（不燃燒）：DEAD / lpPair / marketingWallet / owner / mint / burn
+     */
+    function _transfer(
+        address from,
+        address to,
+        uint256 value
+    ) internal override {
+        require(from != address(0), "ERC20: transfer from zero address");
+        require(to   != address(0), "ERC20: transfer to zero address");
         
-        uint256 elapsed = block.timestamp - vestingStart[beneficiary];
-        uint256 vested = 0;
+        // ---- 計算燃燒量 ----
+        bool shouldBurn = burnEnabled
+            && value > 0
+            && from != DEAD_ADDRESS
+            && to   != DEAD_ADDRESS
+            && from != lpPair
+            && to   != lpPair
+            && from != marketingWallet
+            && to   != marketingWallet
+            && from != owner()
+            && to   != owner();
         
-        if (elapsed >= vestingDuration[beneficiary]) {
-            vested = lockedAmount[beneficiary];
-        } else {
-            vested = lockedAmount[beneficiary] * elapsed / vestingDuration[beneficiary];
+        uint256 burnAmount    = shouldBurn ? (value * BURN_RATE) / 10000 : 0;
+        uint256 transferAmt   = value - burnAmount;
+        
+        // ---- Hooks ----
+        _beforeTokenTransfer(from, to, transferAmt);
+        
+        // ---- 讀取余額 ----
+        uint256 fromBalance = _balanceOf(from);
+        require(fromBalance >= value, "ERC20: transfer amount exceeds balance");
+        
+        // ---- 更新余額（assembly 寫入 storage）----
+        unchecked {
+            _setBalance(from, fromBalance - value);         // 扣總額
+            _setBalance(to, _balanceOf(to) + transferAmt); // 接收方收到扣燒後的
         }
         
-        return lockedAmount[beneficiary] - vested;
-    }
-    
-    // ============ Transfer Override (v4) ============
-    function _beforeTokenTransfer(address from, address to, uint256 value) internal override onlyInitialized {
-        // 檢查鎖倉
-        if (from != address(0) && lockedAmount[from] > 0) {
-            uint256 locked = getLockedAmount(from);
-            require(balanceOf(from) - value >= locked, "ClawCoin: tokens locked");
+        emit Transfer(from, to, transferAmt);
+        _afterTokenTransfer(from, to, transferAmt);
+        
+        // ---- 執行燃燒（assembly 直接修改 totalSupply + DEAD balance）----
+        if (burnAmount > 0) {
+            uint256 currentSupply = _getUintSlot(bytes32(uint256(0)));
+            _setTotalSupply(currentSupply - burnAmount);    // 真正減少總供應
+            totalBurned += burnAmount;
+            emit Transfer(from, DEAD_ADDRESS, burnAmount);
         }
-        super._beforeTokenTransfer(from, to, value);
     }
     
     // ============ Admin Functions ============
-    function pause() external onlyRole(DEFAULT_ADMIN_ROLE) {
-        _pause();
-    }
-    
-    function unpause() external onlyRole(DEFAULT_ADMIN_ROLE) {
-        _unpause();
-    }
-    
-    function mint(address to, uint256 amount) external onlyRole(MINTER_ROLE) {
-        _mint(to, amount);
-    }
-    
-    function burn(address from, uint256 amount) external onlyRole(BURNER_ROLE) {
-        _burn(from, amount);
-    }
-    
-    // 解鎖私募（需手動處理 cliff）
-    function unlockPrivateInvestor(address beneficiary) external onlyRole(OPERATOR_ROLE) {
-        require(lockedAmount[beneficiary] > 0, "ClawCoin: no locked tokens");
-        // 私募6個月後可手動解鎖
-        lockedAmount[beneficiary] = 0;
-        emit TokensUnlocked(beneficiary, 0);
-    }
-    
-    // 更新團隊錢包（12個月後）
-    function updateTeamWallet(address newWallet) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setMarketingWallet(address newWallet) external onlyOwner {
         require(newWallet != address(0), "ClawCoin: zero address");
-        address oldWallet = teamWallet;
-        teamWallet = newWallet;
-        emit TeamWalletUpdated(oldWallet, newWallet);
+        emit MarketingWalletUpdated(marketingWallet, newWallet);
+        marketingWallet = newWallet;
     }
     
-    // 緊急提取（仅合约所有者）
-    function emergencyWithdraw() external onlyRole(DEFAULT_ADMIN_ROLE) nonReentrant {
-        payable(msg.sender).transfer(address(this).balance);
+    function setLpPair(address newPair) external onlyOwner {
+        require(newPair != address(0), "ClawCoin: zero address");
+        emit LpPairUpdated(lpPair, newPair);
+        lpPair = newPair;
+    }
+    
+    function setBurnEnabled(bool enabled) external onlyOwner {
+        burnEnabled = enabled;
+        emit BurnToggled(enabled);
     }
     
     // ============ View Functions ============
     function getTokenInfo() external view returns (
         string memory name_,
         string memory symbol_,
-        uint8 decimals_,
+        uint8   decimals_,
         uint256 totalSupply_,
-        uint256 circulatingSupply_
+        uint256 circulatingSupply_,
+        uint256 totalBurned_
     ) {
         return (
             name(),
             symbol(),
             decimals(),
             totalSupply(),
-            totalSupply() - lockedAmount[ecosystemFund] - lockedAmount[openClawFund] - lockedAmount[teamWallet]
+            totalSupply() - balanceOf(DEAD_ADDRESS),
+            totalBurned
         );
     }
+    
+    receive() external payable {}
 }

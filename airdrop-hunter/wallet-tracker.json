@@ -1,0 +1,172 @@
+{
+  "wallets": [
+    {
+      "name": "部署錢包",
+      "address": "0xADB3e2f2db015cCa98cbF89530D6Fb712F42d610",
+      "chain": "BNB Chain / EVM",
+      "created": "2026-03-24",
+      "networks": {
+        "ethereum": { "address": "0xADB3e2f2db015cCa98cbF89530D6Fb712F42d610" },
+        "scroll": { "address": "0xADB3e2f2db015cCa98cbF89530D6Fb712F42d610", "lastActivity": null, "balance": null },
+        "linea": { "address": "0xADB3e2f2db015cCa98cbF89530D6Fb712F42d610", "lastActivity": null, "balance": null },
+        "zksync": { "address": "0xADB3e2f2db015cCa98cbF89530D6Fb712F42d610", "lastActivity": null, "balance": null },
+        "base": { "address": "0xADB3e2f2db015cCa98cbF89530D6Fb712F42d610", "lastActivity": null, "balance": null },
+        "optimism": { "address": "0xADB3e2f2db015cCa98cbF89530D6Fb712F42d610", "lastActivity": null, "balance": null },
+        "arbitrum": { "address": "0xADB3e2f2db015cCa98cbF89530D6Fb712F42d610", "lastActivity": null, "balance": null }
+      }
+    }
+  ],
+  "airdrops": [
+    {
+      "id": "scroll",
+      "name": "Scroll",
+      "symbol": "SCROLL",
+      "status": "active_mainnet",
+      "wallet": "0xADB3e2f2db015cCa98cbF89530D6Fb712F42d610",
+      "tasks": [
+        { "task": "Bridge ETH to Scroll mainnet", "done": false, "notes": "" },
+        { "task": "Swap on SyncSwap/Uniswap on Scroll", "done": false, "notes": "" },
+        { "task": "Weekly interaction (>=1x per week)", "done": false, "notes": "" }
+      ],
+      "priority": "high",
+      "lastUpdated": "2026-03-24",
+      "estimatedValue": null,
+      "risk": "low"
+    },
+    {
+      "id": "linea",
+      "name": "Linea",
+      "symbol": "LINEA",
+      "status": "active_mainnet",
+      "wallet": "0xADB3e2f2db015cCa98cbF89530D6Fb712F42d610",
+      "tasks": [
+        { "task": "Join Linea Discord", "done": false, "notes": "" },
+        { "task": "Bridge ETH to Linea mainnet", "done": false, "notes": "" },
+        { "task": "Use at least 2 DeFi protocols on Linea", "done": false, "notes": "" }
+      ],
+      "priority": "high",
+      "lastUpdated": "2026-03-24",
+      "estimatedValue": null,
+      "risk": "low"
+    },
+    {
+      "id": "base",
+      "name": "Base",
+      "symbol": "BASE",
+      "status": "no_airdrop_yet",
+      "wallet": "0xADB3e2f2db015cCa98cbF89530D6Fb712F42d610",
+      "tasks": [
+        { "task": "Bridge ETH to Base mainnet", "done": false, "notes": "" },
+        { "task": "Swap on Base Uniswap", "done": false, "notes": "" },
+        { "task": "Weekly interaction (>=1x per week)", "done": false, "notes": "" }
+      ],
+      "priority": "high",
+      "lastUpdated": "2026-03-24",
+      "estimatedValue": null,
+      "risk": "low"
+    },
+    {
+      "id": "zksync",
+      "name": "ZkSync",
+      "symbol": "ZKSYNC",
+      "status": "active_mainnet",
+      "wallet": "0xADB3e2f2db015cCa98cbF89530D6Fb712F42d610",
+      "tasks": [
+        { "task": "Check ZkSync Era mainnet wallet activity", "done": false, "notes": "Confirm historical activity is recorded" },
+        { "task": "Bridge ETH to ZkSync Era", "done": false, "notes": "" },
+        { "task": "Use SyncSwap on ZkSync Era", "done": false, "notes": "" }
+      ],
+      "priority": "medium",
+      "lastUpdated": "2026-03-24",
+      "estimatedValue": null,
+      "risk": "low"
+    },
+    {
+      "id": "starknet",
+      "name": "StarkNet",
+      "symbol": "STRK",
+      "status": "needs_native_wallet",
+      "wallet": "N/A - Need Argent X or Braavos",
+      "tasks": [
+        { "task": "Create Argent X or Braavos wallet", "done": false, "notes": "" },
+        { "task": "Transfer ETH to StarkNet wallet", "done": false, "notes": "" },
+        { "task": "Use at least 1 StarkNet protocol", "done": false, "notes": "" }
+      ],
+      "priority": "medium",
+      "lastUpdated": "2026-03-24",
+      "estimatedValue": null,
+      "risk": "low"
+    },
+    {
+      "id": "layerzero",
+      "name": "LayerZero",
+      "symbol": "ZRO",
+      "status": "already_airdropped",
+      "wallet": "0xADB3e2f2db015cCa98cbF89530D6Fb712F42d610",
+      "tasks": [
+        { "task": "Check if ZRO was claimed", "done": false, "notes": "" }
+      ],
+      "priority": "low",
+      "lastUpdated": "2026-03-24",
+      "estimatedValue": null,
+      "risk": "low"
+    },
+    {
+      "id": "arbitrum",
+      "name": "Arbitrum",
+      "symbol": "ARB",
+      "status": "already_airdropped",
+      "wallet": "0xADB3e2f2db015cCa98cbF89530D6Fb712F42d610",
+      "tasks": [
+        { "task": "Check ARB balance", "done": false, "notes": "" }
+      ],
+      "priority": "low",
+      "lastUpdated": "2026-03-24",
+      "estimatedValue": null,
+      "risk": "low"
+    },
+    {
+      "id": "optimism",
+      "name": "Optimism",
+      "symbol": "OP",
+      "status": "already_airdropped",
+      "wallet": "0xADB3e2f2db015cCa98cbF89530D6Fb712F42d610",
+      "tasks": [
+        { "task": "Check OP balance", "done": false, "notes": "" },
+        { "task": "Watch for Season 6 announcement", "done": false, "notes": "" }
+      ],
+      "priority": "low",
+      "lastUpdated": "2026-03-24",
+      "estimatedValue": null,
+      "risk": "low"
+    },
+    {
+      "id": "blast",
+      "name": "Blast",
+      "symbol": "BLAST",
+      "status": "already_airdropped",
+      "wallet": "0xADB3e2f2db015cCa98cbF89530D6Fb712F42d610",
+      "tasks": [
+        { "task": "Check BLAST balance", "done": false, "notes": "" }
+      ],
+      "priority": "low",
+      "lastUpdated": "2026-03-24",
+      "estimatedValue": null,
+      "risk": "low"
+    },
+    {
+      "id": "metis",
+      "name": "Metis",
+      "symbol": "METIS",
+      "status": "watching",
+      "wallet": "0xADB3e2f2db015cCa98cbF89530D6Fb712F42d610",
+      "tasks": [
+        { "task": "Monitor Mystic Protocol development", "done": false, "notes": "" }
+      ],
+      "priority": "low",
+      "lastUpdated": "2026-03-24",
+      "estimatedValue": null,
+      "risk": "medium"
+    }
+  ]
+}
