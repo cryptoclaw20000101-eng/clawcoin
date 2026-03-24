@@ -1,28 +1,29 @@
 # ClawCoin 病毒行銷文案集
-> 版本：v1.0 | 日期：2026-03-24 | 狀態：✅ 可用
+> 版本：v1.1 | 日期：2026-03-24 | 狀態：✅ 可用
 
 ---
 
 ## 📜 巴菲特名言系列
 
-### 英文版
+### 英文版（Twitter/X 適用）
 > "Someone is sitting in the shade today because someone planted a tree a long time ago."
 > — Warren Buffett
 
 Plant your $CLAW today 🌱
 The lobster builds while others sleep
 
-$CLAW - BSC's First Lobster Meme
-2% burn • 1B supply • Early holders win
+🦐 BSC's First Lobster Meme
+2% burn • 1B supply
 
-👉 https://www.binance.com/register?ref=846594135
-👉 https://www.bitopro.com/users/sign_up?referrer=6264529629
+Join:
+👉 Binance: https://www.binance.com/register?ref=846594135
+👉 Bitopro: https://www.bitopro.com/users/sign_up?referrer=6264529629
 
 #ClawCoin #BSC #Crypto #WarrenBuffett
 
 ---
 
-### 中文版
+### 中文版（Facebook/IG 適用）
 「今天坐在陰涼處的人，
 是因為很久以前有人種了一棵樹。」
 — 巴菲特
@@ -30,12 +31,15 @@ $CLAW - BSC's First Lobster Meme
 現在種下你的 $CLAW 🌱
 龍蝦在別人睡覺時築底
 
-$CLAW — BSC 首個龍蝦迷因幣
-2% 燃燒機制 • 1B 供應 • 早期持有者贏
+🦐 BSC 首個龍蝦迷因幣
+2% 燃燒機制 • 1B 供應
 
-👉 https://www.binance.com/register?ref=846594135
+早起的龍蝦先吃蟲 🌅
 
-#ClawCoin #加密貨幣 #財富自由
+👉 Binance: https://www.binance.com/register?ref=846594135
+👉 Bitopro: https://www.bitopro.com/users/sign_up?referrer=6264529629
+
+#ClawCoin #加密貨幣 #BSC
 
 ---
 
@@ -53,6 +57,7 @@ BSC blockchain • Low fees • High speed
 
 Don't wait for luck. Create it.
 👉 https://www.binance.com/register?ref=846594135
+👉 https://www.bitopro.com/users/sign_up?referrer=6264529629
 
 #ClawCoin #ElonMusk #BSC #Crypto
 
@@ -71,6 +76,7 @@ BSC 區塊鏈 • 低費用 • 高速
 
 不等運氣，創造運氣。
 👉 https://www.binance.com/register?ref=846594135
+👉 https://www.bitopro.com/users/sign_up?referrer=6264529629
 
 #ClawCoin #馬斯克 #BSC #加密貨幣
 
@@ -139,24 +145,49 @@ https://www.bitopro.com/users/sign_up?referrer=6264529629
 
 ---
 
+## 🦐 阿拉伯文版
+
+🦐 $CLAW - عملة ميم لوبستر!
+
+🔹 1B عرض ثابت
+🔹 رسوم منخفضة
+🔹 يقوده المجتمع
+
+جراد البحر يحفر حيث لا يحفر الآخرون 🦐
+
+https://www.binance.com/register?ref=846594135
+#ClawCoin #BSC
+
+---
+
 ## 📝 使用指南
 
 ### 最佳發布平台
 | 平台 | 推薦文案 |
 |------|---------|
-| Twitter/X | 巴菲特系列 / 馬斯克系列（英文） |
-| Facebook | 財富自由系列（多語言） |
-| Telegram | 高轉化版（英文） |
+| Twitter/X | 巴菲特系列 / 馬斯克系列（英文，150字內） |
+| Facebook | 中文版 / 財富自由系列 |
 | Instagram | 圖配文系列 |
+| Telegram | 高轉化版（英文） |
 
 ### 發布時間建議
 - 英文系列：06:00 UTC / 14:00 UTC
 - 中文系列：01:00 UTC / 09:00 UTC
 - 阿拉伯/越南版：本地時間晚間
 
-### A/B 測試建議
-先發「巴菲特系列」測試市場反應，根據互動率調整後續內容策略。
+### 字數限制說明
+- Twitter/X：每篇 **280 字元**，超出的版本已標註
+- Facebook/IG：無限制，所有版本皆可使用
 
 ---
 
-*最後更新：2026-03-24 by 蝦寶 🦐*
+## 🔗 推薦連結（統一）
+
+| 平台 | 連結 |
+|------|------|
+| **Binance 註冊** | https://www.binance.com/register?ref=846594135 |
+| **Bitopro 註冊** | https://www.bitopro.com/users/sign_up?referrer=6264529629 |
+
+---
+
+*最後更新：2026-03-24 v1.1 by 蝦寶 🦐*
