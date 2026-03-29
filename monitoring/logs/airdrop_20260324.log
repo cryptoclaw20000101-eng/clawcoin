@@ -82,3 +82,42 @@
 [2026-03-24 10:00:00] === Airdrop Monitor Start ===
 /Users/cryptoclaw/.openclaw/workspace/clawcoin/monitoring/airdrop-cron.sh: line 15: node: command not found
 [2026-03-24 10:00:00] === Airdrop Monitor End (exit:127) ===
+[2026-03-24 11:00:00] === Airdrop Monitor Start ===
+/Users/cryptoclaw/.openclaw/workspace/clawcoin/monitoring/airdrop-cron.sh: line 15: node: command not found
+[2026-03-24 11:00:00] === Airdrop Monitor End (exit:127) ===
+[2026-03-24 12:00:00] === Airdrop Monitor Start ===
+/Users/cryptoclaw/.openclaw/workspace/clawcoin/monitoring/airdrop-cron.sh: line 15: node: command not found
+[2026-03-24 12:00:00] === Airdrop Monitor End (exit:127) ===
+[2026-03-24 13:00:00] === Airdrop Monitor Start ===
+/Users/cryptoclaw/.openclaw/workspace/clawcoin/monitoring/airdrop-cron.sh: line 15: node: command not found
+[2026-03-24 13:00:01] === Airdrop Monitor End (exit:127) ===
+[2026-03-24 14:00:00] === Airdrop Monitor Start ===
+/Users/cryptoclaw/.openclaw/workspace/clawcoin/monitoring/airdrop-cron.sh: line 15: node: command not found
+[2026-03-24 14:00:00] === Airdrop Monitor End (exit:127) ===
+[2026-03-24 15:00:01] === Airdrop Monitor Start ===
+/Users/cryptoclaw/.openclaw/workspace/clawcoin/monitoring/airdrop-cron.sh: line 15: node: command not found
+[2026-03-24 15:00:01] === Airdrop Monitor End (exit:127) ===
+[2026-03-24 16:00:00] === Airdrop Monitor Start ===
+/Users/cryptoclaw/.openclaw/workspace/clawcoin/monitoring/airdrop-cron.sh: line 15: node: command not found
+[2026-03-24 16:00:00] === Airdrop Monitor End (exit:127) ===
+[2026-03-24 17:00:00] === Airdrop Monitor Start ===
+/Users/cryptoclaw/.openclaw/workspace/clawcoin/monitoring/airdrop-cron.sh: line 15: node: command not found
+[2026-03-24 17:00:00] === Airdrop Monitor End (exit:127) ===
+[2026-03-24 18:00:00] === Airdrop Monitor Start ===
+/Users/cryptoclaw/.openclaw/workspace/clawcoin/monitoring/airdrop-cron.sh: line 15: node: command not found
+[2026-03-24 18:00:00] === Airdrop Monitor End (exit:127) ===
+[2026-03-24 19:00:00] === Airdrop Monitor Start ===
+/Users/cryptoclaw/.openclaw/workspace/clawcoin/monitoring/airdrop-cron.sh: line 15: node: command not found
+[2026-03-24 19:00:00] === Airdrop Monitor End (exit:127) ===
+[2026-03-24 20:00:01] === Airdrop Monitor Start ===
+/Users/cryptoclaw/.openclaw/workspace/clawcoin/monitoring/airdrop-cron.sh: line 15: node: command not found
+[2026-03-24 20:00:01] === Airdrop Monitor End (exit:127) ===
+[2026-03-24 21:00:00] === Airdrop Monitor Start ===
+/Users/cryptoclaw/.openclaw/workspace/clawcoin/monitoring/airdrop-cron.sh: line 15: node: command not found
+[2026-03-24 21:00:00] === Airdrop Monitor End (exit:127) ===
+[2026-03-24 22:00:00] === Airdrop Monitor Start ===
+/Users/cryptoclaw/.openclaw/workspace/clawcoin/monitoring/airdrop-cron.sh: line 15: node: command not found
+[2026-03-24 22:00:00] === Airdrop Monitor End (exit:127) ===
+[2026-03-24 23:00:01] === Airdrop Monitor Start ===
+/Users/cryptoclaw/.openclaw/workspace/clawcoin/monitoring/airdrop-cron.sh: line 15: node: command not found
+[2026-03-24 23:00:01] === Airdrop Monitor End (exit:127) ===

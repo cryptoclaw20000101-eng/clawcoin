@@ -13,7 +13,7 @@ Plant your $CLAW today 🌱
 The lobster builds while others sleep
 
 🦐 BSC's First Lobster Meme
-2% burn • 1B supply
+1B supply • Community driven
 
 Join:
 👉 Binance: https://www.binance.com/register?ref=846594135
@@ -32,7 +32,7 @@ Join:
 龍蝦在別人睡覺時築底
 
 🦐 BSC 首個龍蝦迷因幣
-2% 燃燒機制 • 1B 供應
+1B 供應 • 社群驅動
 
 早起的龍蝦先吃蟲 🌅
 
@@ -53,7 +53,7 @@ $CLAW is important enough 🦐
 The odds ARE in your favor
 
 BSC blockchain • Low fees • High speed
-2% burn mechanism • 1B fixed supply
+1B fixed supply • Community driven
 
 Don't wait for luck. Create it.
 👉 https://www.binance.com/register?ref=846594135
@@ -72,7 +72,7 @@ $CLAW 足夠重要 🦐
 勝算在你這邊
 
 BSC 區塊鏈 • 低費用 • 高速
-2% 燃燒機制 • 1B 固定供應
+1B 固定供應 • 社群驅動
 
 不等運氣，創造運氣。
 👉 https://www.binance.com/register?ref=846594135
@@ -102,18 +102,6 @@ They create it.
 
 ---
 
-### 阿拉伯版
-"أفضل وقت لزراعة شجرة كان منذ 20 عامًا.
-والوقت الأفضل الثاني هو الآن."
-— مثل صيني
-
-$CLAW هي شجرتك 🌱
-ازرعها وسقيها وشاهدها تنمو
-
-#ClawCoin #الحرية_المالية
-
----
-
 ### 越南版
 "Thời điểm tốt nhất để trồng cây là 20 năm trước.
 Thời điểm tốt thứ hai là BÂY GIỜ."
@@ -134,7 +122,7 @@ Elon Musk didn't reach Mars by following the crowd.
 $CLAW won't make you rich overnight.
 But it WILL make early holders smile.
 
-2% of every transaction burns into existence.
+1B fixed supply. Community driven. HODL.
 Less supply = More value. Basic economics.
 
 Join the lobster movement 🦐
@@ -145,20 +133,7 @@ https://www.bitopro.com/users/sign_up?referrer=6264529629
 
 ---
 
-## 🦐 阿拉伯文版
 
-🦐 $CLAW - عملة ميم لوبستر!
-
-🔹 1B عرض ثابت
-🔹 رسوم منخفضة
-🔹 يقوده المجتمع
-
-جراد البحر يحفر حيث لا يحفر الآخرون 🦐
-
-https://www.binance.com/register?ref=846594135
-#ClawCoin #BSC
-
----
 
 ## 📝 使用指南
 
@@ -173,7 +148,7 @@ https://www.binance.com/register?ref=846594135
 ### 發布時間建議
 - 英文系列：06:00 UTC / 14:00 UTC
 - 中文系列：01:00 UTC / 09:00 UTC
-- 阿拉伯/越南版：本地時間晚間
+- 越南版：本地時間晚間
 
 ### 字數限制說明
 - Twitter/X：每篇 **280 字元**，超出的版本已標註
